@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Motion Replicator</title>
+  <meta name="description" content="Auto-schedules your tasks into Google Calendar.">
+  <meta name="theme-color" content="#4f46e5">
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="icon" href="/icons/icon-192.png" type="image/png">
+  <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Tasks">
+  <link rel="stylesheet" href="/styles.css">
+  <script src="/app.js" defer></script>
+</head>
+<body>
+  <!-- Login -->
+  <main id="login-view" class="login" hidden>
+    <form id="login-form" class="card login-card">
+      <img src="/icons/icon-192.png" alt="" width="64" height="64" class="login-logo">
+      <h1>Motion Replicator</h1>
+      <label for="password">Password</label>
+      <input id="password" name="password" type="password" autocomplete="current-password" required autofocus>
+      <button type="submit" class="btn primary">Log in</button>
+      <p id="login-error" class="error" role="alert" hidden></p>
+    </form>
+  </main>
+
+  <!-- App -->
+  <div id="app-view" hidden>
+    <header class="topbar">
+      <h1 class="brand">Motion Replicator</h1>
+      <div class="topbar-actions">
+        <button id="replan-btn" class="btn primary" type="button">Re-plan now</button>
+        <button id="logout-btn" class="btn ghost" type="button" title="Log out">Log out</button>
+      </div>
+    </header>
+
+    <main class="container">
+      <div id="flash" class="flash" role="status" hidden></div>
+      <section id="google-card" class="card google-card"></section>
+      <section id="warnings" class="card warning-card" hidden></section>
+      <div id="stale-banner" class="banner" hidden>
+        Tasks changed since the last plan. <button id="stale-replan" class="link-btn" type="button">Re-plan now</button>
+      </div>
+
+      <div class="layout">
+        <section class="card" id="task-form-card">
+          <h2 id="form-title">New task</h2>
+          <form id="task-form" novalidate>
+            <input type="hidden" name="id">
+            <label for="f-title">Title</label>
+            <input id="f-title" name="title" type="text" maxlength="300" required placeholder="Write project proposal">
+
+            <div class="row">
+              <div>
+                <label for="f-priority">Priority</label>
+                <select id="f-priority" name="priority">
+                  <option value="high">High</option>
+                  <option value="medium" selected>Medium</option>
+                  <option value="low">Low</option>
+                </select>
+              </div>
+              <div>
+                <label for="f-duration">Duration (min)</label>
+                <input id="f-duration" name="duration_minutes" type="number" inputmode="numeric" min="5" max="6000" step="5" value="60" required>
+              </div>
+            </div>
+            <div class="chips" id="duration-chips">
+              <button type="button" class="chip" data-min="15">15m</button>
+              <button type="button" class="chip" data-min="30">30m</button>
+              <button type="button" class="chip" data-min="60">1h</button>
+              <button type="button" class="chip" data-min="90">1.5h</button>
+              <button type="button" class="chip" data-min="120">2h</button>
+              <button type="button" class="chip" data-min="240">4h</button>
+            </div>
+            <p class="hint">Enter the time still remaining. Tasks over 90 min may be split into 30 min+ chunks.</p>
+
+            <div class="row">
+              <div>
+                <label for="f-date">Deadline</label>
+                <input id="f-date" name="deadline_date" type="date" required>
+              </div>
+              <div>
+                <label for="f-time">Time (optional)</label>
+                <input id="f-time" name="deadline_time" type="time">
+              </div>
+            </div>
+
+            <label for="f-notes">Notes (optional)</label>
+            <textarea id="f-notes" name="notes" rows="3" maxlength="5000"></textarea>
+
+            <p id="form-error" class="error" role="alert" hidden></p>
+            <div class="form-actions">
+              <button type="submit" class="btn primary" id="form-submit">Add task</button>
+              <button type="button" class="btn ghost" id="form-cancel" hidden>Cancel</button>
+            </div>
+          </form>
+        </section>
+
+        <section class="card" id="tasks-card">
+          <div class="list-header">
+            <h2>Tasks</h2>
+            <div class="list-controls">
+              <label for="sort" class="inline-label">Sort</label>
+              <select id="sort">
+                <option value="deadline">Deadline</option>
+                <option value="priority">Priority</option>
+              </select>
+              <label class="toggle"><input type="checkbox" id="show-done"> Done</label>
+            </div>
+          </div>
+          <ul id="task-list" class="task-list"></ul>
+          <p id="task-empty" class="empty" hidden>No tasks yet. Add one to get started.</p>
+        </section>
+
+        <section class="card" id="schedule-card">
+          <h2>Upcoming schedule</h2>
+          <p id="last-run" class="muted"></p>
+          <div id="schedule"></div>
+        </section>
+      </div>
+    </main>
+  </div>
+</body>
+</html>

@@ -1,0 +1,28 @@
+{
+  "name": "motion-replicator",
+  "version": "1.0.0",
+  "description": "Single-user, Motion-style auto-scheduler that plans your tasks into Google Calendar.",
+  "private": true,
+  "type": "commonjs",
+  "main": "src/server.js",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js",
+    "migrate": "node src/migrate.js",
+    "cron": "node src/cron.js",
+    "test": "node --test",
+    "gen-key": "node -e \"console.log(require('crypto').randomBytes(32).toString('base64'))\""
+  },
+  "dependencies": {
+    "@googleapis/calendar": "^20.1.0",
+    "connect-pg-simple": "^10.0.0",
+    "express": "^5.3.0",
+    "express-session": "^1.19.0",
+    "helmet": "^8.3.0",
+    "luxon": "^3.7.2",
+    "pg": "^8.23.1"
+  }
+}
