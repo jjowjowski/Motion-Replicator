@@ -91,13 +91,25 @@ const config = {
   },
 };
 
+const ENV_NAMES = {
+  databaseUrl: 'DATABASE_URL',
+  appPassword: 'APP_PASSWORD',
+  sessionSecret: 'SESSION_SECRET',
+  tokenEncryptionKey: 'TOKEN_ENCRYPTION_KEY',
+  'google.clientId': 'GOOGLE_CLIENT_ID',
+  'google.clientSecret': 'GOOGLE_CLIENT_SECRET',
+};
+
 function requireConfig(keys) {
   const missing = keys.filter((k) => {
     const value = k.split('.').reduce((o, part) => (o ? o[part] : undefined), config);
     return !value;
   });
   if (missing.length) {
-    throw new Error(`Missing required configuration: ${missing.join(', ')}`);
+    throw new Error(
+      `Missing required environment variables: ${missing.map((k) => ENV_NAMES[k] || k).join(', ')}. ` +
+        'Set them in the Railway service Variables tab (see docs/SETUP.md, Part 3).',
+    );
   }
 }
 
